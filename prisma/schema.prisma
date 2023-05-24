@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model modeUser {
+  id           String @id @default(uuid())
+  nameUser     String
+  statusUser   String
+  passwordUser String
+  loginUser    String
+
+  //Relacionamento
+  offersUser        modelOffer[]
+  seller            modelTransaction[] @relation("seller")
+  buyer             modelTransaction[] @relation("buyer")
+  modelStatusUser   modelStatusUser?   @relation("status", fields: [modelStatusUserId], references: [id])
+  modelStatusUserId Int?
+
+  @@map("users")
+}
+
+model modelStatusUser {
+  id       Int        @id @default(autoincrement())
+  status   String
+  modeUser modeUser[] @relation("status")
+
+  @@map("status-user")
+}
+
+model modelCommodities {
+  id          Int    @id @default(autoincrement())
+  commodities String
+
+  @@map("commodities")
+}
+
+model modelTypeOffer {
+  id   Int    @id @default(autoincrement())
+  type String
+
+  @@map("type-offer")
+}
+
+model modelOffer {
+  id          String   @id @default(uuid())
+  idUserOffer String
+  priceOffer  Decimal?
+  amountOffer Decimal?
+  commodities Int
+  typeOfferId Int
+
+  userId String
+
+  user modeUser @relation(fields: [userId], references: [id])
+
+  @@map("offer")
+}
+
+model modelTransaction {
+  id               String  @id @default(uuid())
+  idUserSell       String
+  idUserBuy        String
+  priceTransaction Decimal
+  idOffer          String
+
+  userSeller modeUser @relation("seller", fields: [idUserSell], references: [id])
+  userBuyer  modeUser @relation("buyer", fields: [idUserBuy], references: [id])
+
+  @@map("transaction")
+}
