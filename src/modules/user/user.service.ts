@@ -66,7 +66,7 @@ export class UserService {
     //Verificando se o usuario já existe
     const userExist = await this.prisma.modeUser.findFirst({
       where: {
-        loginUser: id,
+        id: id,
       },
     });
 
@@ -82,6 +82,6 @@ export class UserService {
 
     console.log({ UsuarioDeletado: returnDelete });
 
-    return returnDelete;
+    return { 'Usuario deletado': returnDelete };
   }
 }

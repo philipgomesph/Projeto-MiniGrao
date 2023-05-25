@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -72,4 +72,13 @@ model modelTransaction {
   userBuyer  modeUser @relation("buyer", fields: [idUserBuy], references: [id])
 
   @@map("transaction")
+}
+
+enum enumStatusUser {
+  vendedor
+  comprador
+  vendedorcomprador
+  admin
+
+  @@map("status-user")
 }
