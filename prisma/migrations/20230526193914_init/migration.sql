@@ -4,7 +4,9 @@ CREATE TABLE "users" (
     "nameUser" TEXT NOT NULL,
     "statusUser" TEXT NOT NULL,
     "passwordUser" TEXT NOT NULL,
-    "loginUser" TEXT NOT NULL
+    "loginUser" TEXT NOT NULL,
+    "modelStatusUserId" INTEGER,
+    CONSTRAINT "users_modelStatusUserId_fkey" FOREIGN KEY ("modelStatusUserId") REFERENCES "status-user" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -28,6 +30,7 @@ CREATE TABLE "type-offer" (
 -- CreateTable
 CREATE TABLE "offer" (
     "id" TEXT NOT NULL PRIMARY KEY,
+    "idUserOffer" TEXT NOT NULL,
     "priceOffer" DECIMAL,
     "amountOffer" DECIMAL,
     "commodities" INTEGER NOT NULL,
@@ -42,5 +45,7 @@ CREATE TABLE "transaction" (
     "idUserSell" TEXT NOT NULL,
     "idUserBuy" TEXT NOT NULL,
     "priceTransaction" DECIMAL NOT NULL,
-    "idOffer" TEXT NOT NULL
+    "idOffer" TEXT NOT NULL,
+    CONSTRAINT "transaction_idUserSell_fkey" FOREIGN KEY ("idUserSell") REFERENCES "users" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "transaction_idUserBuy_fkey" FOREIGN KEY ("idUserBuy") REFERENCES "users" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );

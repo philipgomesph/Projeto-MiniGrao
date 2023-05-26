@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -53,8 +53,8 @@ model modelOffer {
   amountOffer Decimal?
   commodities Int
   typeOfferId Int
-
-  userId String
+  open        Boolean
+  userId      String
 
   user modeUser @relation(fields: [userId], references: [id])
 
@@ -74,11 +74,11 @@ model modelTransaction {
   @@map("transaction")
 }
 
-enum enumStatusUser {
-  vendedor
-  comprador
-  vendedorcomprador
-  admin
+// enum enumStatusUser {
+//   vendedor
+//   comprador
+//   vendedorcomprador
+//   admin
 
-  @@map("status-user")
-}
+//   @@map("status-user")
+// }

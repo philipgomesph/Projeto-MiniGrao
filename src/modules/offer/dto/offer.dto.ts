@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsString } from 'class-validator';
 
 export type commoditiesDTO = {
   id: number;
@@ -31,6 +31,9 @@ export class offerDTO {
 
   @IsString()
   userId: string;
+
+  @IsBoolean()
+  open: boolean;
 }
 
 export type transactionDTO = {

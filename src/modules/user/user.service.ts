@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { UserDTO } from './dto/user.dto';
 import { PrismaService } from 'src/database/PrismaService';
 import { UserEntity } from './entity/user.entity';
@@ -18,7 +22,7 @@ export class UserService {
 
     //validando usuario existente
     if (userExist) {
-      throw new Error('Usuario já existe');
+      throw new BadRequestException('Usuario já existe');
     }
 
     //caso usuario nao exista, cria
