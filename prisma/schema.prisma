@@ -56,7 +56,8 @@ model modelOffer {
   open        Boolean
   userId      String
 
-  user modeUser @relation(fields: [userId], references: [id])
+  user             modeUser          @relation(fields: [userId], references: [id])
+  modelTransaction modelTransaction?
 
   @@map("offer")
 }
@@ -66,19 +67,11 @@ model modelTransaction {
   idUserSell       String
   idUserBuy        String
   priceTransaction Decimal
-  idOffer          String
+  idOffer          String  @unique
 
-  userSeller modeUser @relation("seller", fields: [idUserSell], references: [id])
-  userBuyer  modeUser @relation("buyer", fields: [idUserBuy], references: [id])
+  userSeller modeUser   @relation("seller", fields: [idUserSell], references: [id])
+  userBuyer  modeUser   @relation("buyer", fields: [idUserBuy], references: [id])
+  modelOffer modelOffer @relation(fields: [idOffer], references: [id])
 
   @@map("transaction")
 }
-
-// enum enumStatusUser {
-//   vendedor
-//   comprador
-//   vendedorcomprador
-//   admin
-
-//   @@map("status-user")
-// }
