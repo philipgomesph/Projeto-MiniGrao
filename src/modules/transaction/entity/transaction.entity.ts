@@ -18,4 +18,6 @@ export class TransactionEntity {
     this.priceTransaction = payload.priceTransaction;
     this.idOffer = payload.idOffer;
   }
+
+  //relação com userseller
 }

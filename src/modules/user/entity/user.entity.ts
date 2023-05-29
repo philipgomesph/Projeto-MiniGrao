@@ -27,8 +27,6 @@ export class UserEntity {
     this.statusUser = payload.statusUser;
   }
 
-  /* setOfferUser */
-
   setOfferUser(offers: OfferEntity) {
     this.offerUser = offers;
     return this;

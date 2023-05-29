@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import { IsBoolean, IsNumber, IsString } from 'class-validator';
 
 export type commoditiesDTO = {
@@ -18,6 +19,7 @@ export class offerDTO {
   idUserOffer: string;
 
   @IsNumber()
+  @Transform(({ value }) => Number(value))
   priceOffer: number;
 
   @IsNumber()
