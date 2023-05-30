@@ -37,7 +37,7 @@ export class UserService {
     const allUsers = await this.prisma.modeUser.findMany();
 
     if (!allUsers) {
-      throw new Error('Não existe usuarios cadastrados');
+      throw new NotFoundException('Não existe usuarios cadastrados');
     }
 
     return allUsers;
@@ -75,7 +75,7 @@ export class UserService {
     });
 
     if (!userExist) {
-      throw new Error('Usuario não existe');
+      throw new NotFoundException('Usuario não existe');
     }
 
     const returnDelete = await this.prisma.modeUser.delete({

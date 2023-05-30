@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { offerDTO } from './dto/offer.dto';
 import { PrismaService } from 'src/database/PrismaService';
 import { modelOffer } from '@prisma/client';
@@ -8,6 +12,15 @@ export class OfferService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: offerDTO) {
+    const offerExist = await this.prisma.modelOffer.findFirst({
+      where: {
+        id: data.id,
+      },
+    });
+
+    if (!offerExist) {
+      throw new BadRequestException('Id de oferta já existe');
+    }
     const newOffer: modelOffer = await this.prisma.modelOffer.create({ data });
 
     return { 'Oferta criada': newOffer };
@@ -17,7 +30,7 @@ export class OfferService {
     const allOffers = await this.prisma.modelOffer.findMany();
 
     if (!allOffers) {
-      throw new Error('Não existe ofertas cadastradas');
+      throw new NotFoundException('Não existe ofertas cadastradas');
     }
 
     return allOffers;
@@ -31,7 +44,7 @@ export class OfferService {
     });
 
     if (!userExist) {
-      throw new Error('Usuario não existe');
+      throw new NotFoundException('Usuario não existe');
     }
 
     return await this.prisma.modelOffer.findMany({

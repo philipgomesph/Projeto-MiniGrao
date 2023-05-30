@@ -15,13 +15,18 @@ export class TransactionController {
     return this.transactionService.store(idUserBuy, idOffer);
   }
 
-  @Get(':id')
+  @Get(':idUser')
   async showSellerTransactionByUserId(@Param('idUser') idUser: string) {
     return this.transactionService.showSellerTransactionByUserid(idUser);
   }
 
-  @Get(':id')
+  @Get('buy/:idUser')
   async showBuyerTransactionByUserId(@Param('idUser') idUser: string) {
-    return this.transactionService.showSellerTransactionByUserid(idUser);
+    return this.transactionService.showBuyerTransactionByUserid(idUser);
+  }
+
+  @Get()
+  async showAllTransactions() {
+    return this.transactionService.showAll();
   }
 }

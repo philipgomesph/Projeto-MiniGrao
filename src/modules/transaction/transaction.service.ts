@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/database/PrismaService';
 import { TransactionDTO } from './dto/transaction.dto';
 import { OfferEntity } from '../offer/entity/offer.entity';
@@ -39,7 +43,7 @@ export class TransactionService {
       },
     });
 
-    const offerUpdated = await this.prisma.modelOffer.update({
+    await this.prisma.modelOffer.update({
       where: {
         id: idOffer,
       },
@@ -58,13 +62,14 @@ export class TransactionService {
       },
     });
 
+    console.log(userExist);
     if (!userExist) {
       throw new NotFoundException('Usuario não existe');
     }
 
     const trasactionsByUserId = await this.prisma.modelTransaction.findMany({
       where: {
-        idUserSell: idUser,
+        idUserSell: userExist.id,
       },
       include: { userSeller: true, userBuyer: true },
       /* select: {
@@ -75,6 +80,11 @@ export class TransactionService {
       },*/
     });
 
+    if (!trasactionsByUserId) {
+      throw new BadRequestException(
+        'Nao foi possivel encontrar trasações para esse usuario',
+      );
+    }
     return trasactionsByUserId;
   }
 
@@ -91,17 +101,27 @@ export class TransactionService {
 
     const trasactionsByUserId = await this.prisma.modelTransaction.findMany({
       where: {
-        idUserBuy: idUser,
+        idUserBuy: userExist.id,
       },
-      //include: { userSeller: true, userBuyer: true },
-      select: {
+      include: { userSeller: true, userBuyer: true },
+      /* select: {
         id: true,
         priceTransaction: true,
         userSeller: true,
         userBuyer: true,
-      },
+      },*/
     });
 
+    if (!trasactionsByUserId) {
+      throw new BadRequestException(
+        'Nao foi possivel encontrar trasações para esse usuario',
+      );
+    }
     return trasactionsByUserId;
+  }
+
+  async showAll() {
+    const allTrasactions = await this.prisma.modelTransaction.findMany();
+    return allTrasactions;
   }
 }
