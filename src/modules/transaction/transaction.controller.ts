@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { TransactionDTO } from './dto/transaction.dto';
 import { identity } from 'rxjs';
@@ -13,5 +13,15 @@ export class TransactionController {
     @Param('idOffer') idOffer: string,
   ) {
     return this.transactionService.store(idUserBuy, idOffer);
+  }
+
+  @Get(':id')
+  async showSellerTransactionByUserId(@Param('idUser') idUser: string) {
+    return this.transactionService.showSellerTransactionByUserid(idUser);
+  }
+
+  @Get(':id')
+  async showBuyerTransactionByUserId(@Param('idUser') idUser: string) {
+    return this.transactionService.showSellerTransactionByUserid(idUser);
   }
 }

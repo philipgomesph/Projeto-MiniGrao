@@ -30,16 +30,13 @@ export class TransactionService {
       throw new NotFoundException('ID de Usuario de compra, nao encontrado');
     }
 
-    const data: transactionDTO = {
-      id: '',
-      idOffer: verifyOffer.id,
-      priceTransaction: Number(verifyOffer.priceOffer),
-      idUserBuy,
-      idUserSell: verifyOffer.idUserOffer,
-    };
-
     const transactionCreated = await this.prisma.modelTransaction.create({
-      data,
+      data: {
+        idOffer: verifyOffer.id,
+        priceTransaction: Number(verifyOffer.priceOffer),
+        idUserBuy,
+        idUserSell: verifyOffer.idUserOffer,
+      },
     });
 
     const offerUpdated = await this.prisma.modelOffer.update({
@@ -52,5 +49,59 @@ export class TransactionService {
     });
 
     return { 'Transacao criada': transactionCreated };
+  }
+
+  async showSellerTransactionByUserid(idUser: string) {
+    const userExist = await this.prisma.modeUser.findFirst({
+      where: {
+        id: idUser,
+      },
+    });
+
+    if (!userExist) {
+      throw new NotFoundException('Usuario não existe');
+    }
+
+    const trasactionsByUserId = await this.prisma.modelTransaction.findMany({
+      where: {
+        idUserSell: idUser,
+      },
+      include: { userSeller: true, userBuyer: true },
+      /* select: {
+        id: true,
+        priceTransaction: true,
+        userSeller: true,
+        userBuyer: true,
+      },*/
+    });
+
+    return trasactionsByUserId;
+  }
+
+  async showBuyerTransactionByUserid(idUser: string) {
+    const userExist = await this.prisma.modeUser.findFirst({
+      where: {
+        id: idUser,
+      },
+    });
+
+    if (!userExist) {
+      throw new NotFoundException('Usuario não existe');
+    }
+
+    const trasactionsByUserId = await this.prisma.modelTransaction.findMany({
+      where: {
+        idUserBuy: idUser,
+      },
+      //include: { userSeller: true, userBuyer: true },
+      select: {
+        id: true,
+        priceTransaction: true,
+        userSeller: true,
+        userBuyer: true,
+      },
+    });
+
+    return trasactionsByUserId;
   }
 }
